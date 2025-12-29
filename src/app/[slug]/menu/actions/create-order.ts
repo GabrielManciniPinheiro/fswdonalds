@@ -1,7 +1,10 @@
 "use server";
 
-import { db } from "@/lib/prisma";
 import { ConsumptionMethod } from "@prisma/client";
+import { revalidatePath } from "next/cache";
+
+import { db } from "@/lib/prisma";
+
 import { removeCpfPunctuation } from "../helpers/cpf";
 
 interface CreateOrderInput {
@@ -16,6 +19,7 @@ interface CreateOrderInput {
   consumptionMethod: ConsumptionMethod;
   slug: string;
 }
+
 export const createOrder = async (input: CreateOrderInput) => {
   const restaurant = await db.restaurant.findUnique({
     where: {
@@ -33,11 +37,11 @@ export const createOrder = async (input: CreateOrderInput) => {
     },
   });
   const productsWithPricesAndQuantities = input.products.map((product) => ({
-    quantity: product.quantity,
     productId: product.id,
+    quantity: product.quantity,
     price: productsWithPrices.find((p) => p.id === product.id)!.price,
   }));
-  await db.order.create({
+  const order = await db.order.create({
     data: {
       status: "PENDING",
       customerName: input.customerName,
@@ -57,4 +61,11 @@ export const createOrder = async (input: CreateOrderInput) => {
       restaurantId: restaurant.id,
     },
   });
+  revalidatePath(`/${input.slug}/orders`);
+  // redirect(
+  //   `/${input.slug}/orders?cpf=${removeCpfPunctuation(input.customerCpf)}`,
+  // );
+  return order;
 };
+  
+
