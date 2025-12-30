@@ -88,4 +88,6 @@ enum ConsumptionMethod {
   PICKUP
   TAKEAWAY
   DELIVERY
+  PAYMENT_CONFIRMED
+  PAYMENT_FAILED
 }

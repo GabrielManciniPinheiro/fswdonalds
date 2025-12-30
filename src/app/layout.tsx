@@ -11,7 +11,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "GMP-FastFoods",
+  title: "GMP FastFoods",
   description: "Aplicativo Totem de pedidos para fast-foods",
 };
 
