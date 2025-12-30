@@ -10,10 +10,6 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-
   /* --- 2. Configuração de Redirecionamento --- */
   async redirects() {
     return [
